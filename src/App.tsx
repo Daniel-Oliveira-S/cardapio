@@ -2,7 +2,9 @@ import { useState } from 'react';
 import './App.css'
 import logo from './assets/logo.png'
 import mulher from './assets/MULHER-PESO.png'
-import {ContactUs} from './email';
+import emailjs from '@emailjs/browser';
+import { useRef } from 'react';
+import food from './assets/food.png'
 export default function App() {
   const [peso, setPeso] = useState("");
   const [altura, setAltura] = useState("");
@@ -47,6 +49,38 @@ export default function App() {
     // Atualizar o resultado
     setResult(get.toFixed(2));
   };
+
+  const form = useRef<HTMLFormElement>(null);
+
+  const sendEmail = (e: { preventDefault: () => void; }) => {
+    e.preventDefault();
+
+    if (form.current) {
+      emailjs
+        .sendForm('service_6z66jbr', 'template_ute7rif', form.current, 'DzmDNzwMy-TsMf4Rn')
+        .then(
+          () => {
+            console.log('SUCCESS!');
+      
+          },
+          (error) => {
+            console.log('FAILED...', error.text);
+          },
+        );
+    }
+  };
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    // Executar o cálculo do GET
+    calcularGET(e);
+
+    // Se o cálculo foi bem-sucedido, enviar o e-mail
+    sendEmail(e);
+
+    console.log('Obrigado! Em breve entraremos em contato.');
+  };
+
   return (
     <>
      <div id="hero">
@@ -55,31 +89,51 @@ export default function App() {
       </header>
       <div id="hero-content">
         <div className="hero-text">
-          <h1>Descubra seu peso ideal hoje!</h1>
-          <p>Calcule seu Índice de Massa Corporal para alcançar seus objetivos de bem-estar.</p>
+          <h1>Descubra o caminho para sua melhor versão!</h1>
+          <p>Calcule seu gasto calórico total e entenda as reais necessidades do seu corpo.</p>
         </div>
         <img src={mulher} alt="" />
       </div>
      </div>
 
-     <div id="form">
-    <h1>Deixe seu contato</h1>
-    <p>
-      Preencha o formulário e tenha acesso imediato à sua calculadora personalizada!
-    </p>
+<section id="bullet-img">
+<div className="text-bullet">
+  <h1>
+    Por quê calcular seu gasto calórico total?
+  </h1>
 
-    <ContactUs />
+  <p>
+    A saúde não é uma fórmula mágica, mas entender as necessidades do seu corpo é o primeiro passo para uma rotina mais saudável e equilibrada.
+  </p>
+
+  <p>Benefícios de um cálculo personalizado</p>
+
+  <ul>
+    <li>Crie uma alimentação que funciona pra você</li>
+    <li>Saiba quantas calorias consumir para perder peso ou ganhar massa muscular. </li>
+    <li>Otimize seus treinos e veja resultados mais rápidos.</li>
+    <li>Acompanhe sua evolução e mantenha-se motivado.</li>
+  </ul>
+</div>
+
+<img src={food} alt="" />
+</section>
+<div className="divide"></div>
+
+     <div id="form">
+
+
   
-      <div className="divide"></div>
-      <h1>Transforme sua vida Hoje</h1>
+      <h1>Comece agora e transforme sua rotina!</h1>
       <p>Preencha o formulário e tenha acesso imediato à sua calculadora personalizada!</p>
-      <form className="calc" onSubmit={calcularGET}>
+      <form className="calc" onSubmit={handleSubmit}>
       <label>
         <p>Seu Peso</p>
         <input
           type="number"
           placeholder="kg"
           value={peso}
+          name='peso'
           onChange={(e) => setPeso(e.target.value)}
           required
         />
@@ -90,6 +144,7 @@ export default function App() {
           type="number"
           placeholder="cm"
           value={altura}
+          name='altura'
           onChange={(e) => setAltura(e.target.value)}
           required
         />
@@ -99,13 +154,16 @@ export default function App() {
         <input
           type="number"
           value={idade}
+          name='idade'
           onChange={(e) => setIdade(e.target.value)}
           required
         />
       </label>
       <label>
         <p>Sexo</p>
-        <select value={sexo} onChange={(e) => setSexo(e.target.value)}>
+        <select value={sexo} 
+        name='sexo'
+        onChange={(e) => setSexo(e.target.value)}>
           <option value="f">Feminino</option>
           <option value="m">Masculino</option>
         </select>
@@ -114,6 +172,7 @@ export default function App() {
         <p>Atividade Física</p>
         <select
           value={atividade}
+          name='atividade'
           onChange={(e) => setAtividade(e.target.value as "sedentario" | "leve" | "moderado" | "intenso")}
         >
           <option value="sedentario">Sedentário (0 dias por semana.)</option>
@@ -127,13 +186,12 @@ export default function App() {
 <input
         type="text"
         className="result"
+        name='result'
         value={result ? `${result} kcal/dia` : ""}
         readOnly
       />
 </label>
-      <button className="calcular" type="submit">
-        CALCULAR AGORA!
-      </button>
+      <input className="calcular" value="CALCULAR AGORA!" type="submit"/>
       </form>
      </div>
     </>
