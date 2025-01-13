@@ -99,7 +99,7 @@ export default function App() {
 <section id="bullet-img">
 <div className="text-bullet">
   <h1>
-    Por quê calcular seu gasto calórico total?
+    Por que calcular seu gasto calórico total?
   </h1>
 
   <p>
