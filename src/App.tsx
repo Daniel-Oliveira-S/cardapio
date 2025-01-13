@@ -85,14 +85,14 @@ export default function App() {
     <>
      <div id="hero">
       <header>
-        <img src={logo} alt="" />
+        <img src={logo} alt="" className='logo' />
       </header>
       <div id="hero-content">
         <div className="hero-text">
           <h1>Descubra o caminho para sua melhor versão!</h1>
           <p>Calcule seu gasto calórico total e entenda as reais necessidades do seu corpo.</p>
         </div>
-        <img src={mulher} alt="" />
+        <img src={mulher} className='mulher' alt="" />
       </div>
      </div>
 
@@ -159,7 +159,7 @@ export default function App() {
           required
         />
       </label>
-      <label>
+      <label className='sex'>
         <p>Sexo</p>
         <select value={sexo} 
         name='sexo'
